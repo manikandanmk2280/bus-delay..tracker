@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bus Delay Tracker</title>
+</head>
+<body>
+
+<h1>🚌 Bus Delay & Tracking System</h1>
+
+<form method="POST">
+    Enter Bus Number:
+    <input type="text" name="bus_number" required>
+    <button type="submit">Track Bus</button>
+</form>
+
+{% if bus_info %}
+    <h2>Bus Details</h2>
+    <p><strong>Route:</strong> {{ bus_info.route }}</p>
+    <p><strong>Current Location:</strong> {{ bus_info.current_location }}</p>
+    <p><strong>Scheduled Time:</strong> {{ bus_info.scheduled_time }}</p>
+    <p><strong>Delay:</strong> {{ bus_info.delay_minutes }} minutes</p>
+    <p><strong>Expected Arrival:</strong> {{ bus_info.expected_arrival }}</p>
+{% endif %}
+
+</body>
+</html>
