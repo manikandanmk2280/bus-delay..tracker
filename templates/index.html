@@ -1,27 +1,190 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Bus Delay Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bus Tracking System</title>
+
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(120deg,#89f7fe,#66a6ff);
+}
+
+/* Header */
+header{
+    background: linear-gradient(90deg,#ff512f,#dd2476);
+    color:white;
+    text-align:center;
+    padding:15px;
+    font-size:22px;
+    font-weight:bold;
+}
+
+/* Dashboard Layout */
+.dashboard{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:15px;
+    padding:15px;
+    height:calc(100vh - 70px);
+}
+
+/* Cards */
+.card{
+    background:white;
+    border-radius:15px;
+    padding:15px;
+    box-shadow:0 6px 15px rgba(0,0,0,0.2);
+    overflow:auto;
+}
+
+/* Search Box */
+.search-box{
+    display:flex;
+    gap:10px;
+}
+
+input{
+    flex:1;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:14px;
+}
+
+button{
+    background: linear-gradient(90deg,#36d1dc,#5b86e5);
+    border:none;
+    padding:10px 18px;
+    border-radius:8px;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    transform:scale(1.05);
+}
+
+/* Table */
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+}
+
+th{
+    background: linear-gradient(90deg,#667eea,#764ba2);
+    color:white;
+    padding:8px;
+}
+
+td{
+    padding:8px;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#f4f7ff;
+}
+
+tr:hover{
+    background:#e6edff;
+}
+
+/* Status Colors */
+.delay{
+    color:red;
+    font-weight:bold;
+}
+
+.ontime{
+    color:green;
+    font-weight:bold;
+}
+
+/* Title */
+h3{
+    margin-top:0;
+    color:#444;
+}
+</style>
 </head>
+
 <body>
 
-<h1>🚌 Bus Delay & Tracking System</h1>
+<header>
+🚌 Smart Bus Delay & Tracking Dashboard
+</header>
 
-<form method="POST">
-    Enter Bus Number:
-    <input type="text" name="bus_number" required>
-    <button type="submit">Track Bus</button>
+<div class="dashboard">
+
+<!-- Search -->
+<div class="card">
+<h3>Search Bus</h3>
+<form method="POST" class="search-box">
+<input type="text" name="bus_number" placeholder="Enter Bus Number (Example: TN1001)">
+<button type="submit">Track</button>
 </form>
+</div>
+
+<!-- Bus Details -->
+<div class="card">
+<h3>Bus Details</h3>
 
 {% if bus_info %}
-    <h2>Bus Details</h2>
-    <p><strong>Route:</strong> {{ bus_info.route }}</p>
-    <p><strong>Current Location:</strong> {{ bus_info.current_location }}</p>
-    <p><strong>Scheduled Time:</strong> {{ bus_info.scheduled_time }}</p>
-    <p><strong>Delay:</strong> {{ bus_info.delay_minutes }} minutes</p>
-    <p><strong>Expected Arrival:</strong> {{ bus_info.expected_arrival }}</p>
+<table>
+<tr>
+<th>Bus</th>
+<th>Route</th>
+<th>Location</th>
+<th>Delay</th>
+<th>Capacity</th>
+</tr>
+
+<tr>
+<td>{{ bus_info.bus_number }}</td>
+<td>{{ bus_info.route }}</td>
+<td>{{ bus_info.current_location }}</td>
+<td class="{% if bus_info.delay_minutes > 0 %}delay{% else %}ontime{% endif %}">
+{{ bus_info.delay_minutes }} min
+</td>
+<td>{{ bus_info.capacity }}</td>
+</tr>
+</table>
+{% else %}
+<p>Select a bus to see details.</p>
 {% endif %}
+</div>
+
+<!-- All Buses -->
+<div class="card" style="grid-column: span 2;">
+<h3>All Available Buses</h3>
+<table>
+<tr>
+<th>Bus Number</th>
+<th>Route</th>
+<th>Current Location</th>
+<th>Delay</th>
+<th>Capacity</th>
+</tr>
+
+{% for bus in bus_data.values() %}
+<tr>
+<td>{{ bus.bus_number }}</td>
+<td>{{ bus.route }}</td>
+<td>{{ bus.current_location }}</td>
+<td>{{ bus.delay_minutes }} min</td>
+<td>{{ bus.capacity }}</td>
+</tr>
+{% endfor %}
+
+</table>
+</div>
+
+</div>
 
 </body>
 </html>
-
